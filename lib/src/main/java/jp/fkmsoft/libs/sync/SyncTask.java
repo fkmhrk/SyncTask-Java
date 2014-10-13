@@ -10,6 +10,7 @@ import jp.fkmsoft.libs.task.impl.TaskQueueImpl;
  * Sync Task. Developer should extend this class and implement methods.
  */
 abstract public class SyncTask<T> {
+
     public interface SyncListener {
         void onSuccess(SyncResult result);
         void onError(SyncResult result, Exception e);
@@ -38,6 +39,7 @@ abstract public class SyncTask<T> {
         }
         mRunning = true;
         mResult = new SyncResult();
+        mCallback = callback;
         doFetch();
     }
 
@@ -49,8 +51,8 @@ abstract public class SyncTask<T> {
     protected abstract void doFetch();
 
     protected void failed(Exception e) {
-        mCallback.onError(mResult, e);
         mRunning = false;
+        mCallback.onError(mResult, e);
     }
 
     protected void doneFetch(List<T> fetchedObjects) {
@@ -152,7 +154,7 @@ abstract public class SyncTask<T> {
      * This method will be called when uploading is done and need to update local storage.
      * Developer will put server ID / server modified time of this object.
      * Call {@link jp.fkmsoft.libs.sync.SyncTask#donePutModifiedObject(Object)} if putting is done.
-     * @param uploadedObject
+     * @param uploadedObject the uploaded object
      */
     protected abstract void putModifiedObject(T uploadedObject);
 
@@ -179,4 +181,8 @@ abstract public class SyncTask<T> {
         }
     }
 
+    // getter
+    public boolean isRunning() {
+        return mRunning;
+    }
 }

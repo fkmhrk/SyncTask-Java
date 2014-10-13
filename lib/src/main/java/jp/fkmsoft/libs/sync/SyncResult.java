@@ -14,4 +14,12 @@ public class SyncResult {
     public void addDownloadCount(int count) {
         mDownloadCount += count;
     }
+
+    public int getUploadCount() {
+        return mUploadCount;
+    }
+
+    public int getDownloadCount() {
+        return mDownloadCount;
+    }
 }
